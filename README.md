@@ -1,6 +1,10 @@
-# Forecast MVP/PoC — SKU × Region weekly forecasting
+# Weekly product-demand forecasting
 
-This repository contains a minimal end‑to‑end MVP that ingests raw CSVs (credit + consumer panel), links them via hashed IDs, computes panel weights, builds weekly features, trains quantile LightGBM models, optionally trains DeepAR/PyMC, ensembles forecasts, and serves results via FastAPI. An example Airflow DAG and Dockerfile are included.
+## A forecast is the end of a pipeline
+
+Follow data through ingestion, panel/credit linking, weighting, feature construction, model training, and ensemble/reconciliation. [The serving application](src/serving/app.py) is the output boundary, and [dags/forecast_dag.py](dags/forecast_dag.py) shows the orchestration entry point.
+
+The included sample-data directory makes the pipeline inspectable without claiming a production dataset. Compare model outputs using held-out time periods and documented baselines, and keep optional heavyweight model dependencies separate from the core data/serving path. The tests below cover implementation behavior, not business forecast accuracy.
 
 ## Directory
 
@@ -123,7 +127,7 @@ curl -X POST http://localhost:8000/forecast \
 
 12) Airflow orchestration (optional)
 
-- Install and initialize Airflow per official docs (Airflow installation is heavyweight; use the official constraints). 
+- Install and initialize Airflow per official docs (Airflow installation is heavyweight; use the official constraints).
 - Copy `dags/forecast_dag.py` into your Airflow DAGs folder, configure connections, and trigger DAG runs.
 
 ## Tests and lint
